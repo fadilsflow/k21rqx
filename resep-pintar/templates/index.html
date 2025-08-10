@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI Ide Resep</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      .loading-spinner {
+        border: 3px solid #f3f3f3;
+        border-top: 3px solid #3498db;
+        border-radius: 50%;
+        width: 18px;
+        height: 18px;
+        animation: spin 1s linear infinite;
+        display: inline-block;
+        vertical-align: middle;
+      }
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50 text-gray-800">
+    <div class="max-w-2xl mx-auto py-10 px-4">
+      <h1 class="text-3xl font-bold text-center mb-6">AI Ide Resep</h1>
+      <form
+        method="POST"
+        class="bg-white rounded-xl shadow p-6 space-y-4"
+        onsubmit="return handleSubmit()"
+      >
+        <label class="block">
+          <span class="text-lg font-medium">Bahan yang tersedia</span>
+          <textarea
+            name="ingredients"
+            id="ingredients"
+            class="mt-2 w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            rows="3"
+            placeholder="Contoh: ayam, bawang, cabai"
+            required
+          >
+{{ request.form.get('ingredients', '') }}</textarea
+          >
+        </label>
+        <button
+          id="submitBtn"
+          type="submit"
+          class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg flex justify-center items-center gap-2"
+        >
+          <span id="btnText">Dapatkan Ide Resep</span>
+          <span id="spinner" class="loading-spinner hidden"></span>
+        </button>
+      </form>
+
+      {% if recipes %}
+      <div class="mt-8 space-y-4">
+        {% for r in recipes %}
+        <div class="bg-white rounded-xl shadow p-4">
+          <h2 class="text-lg font-bold">{{ r.title }}</h2>
+          <p class="text-sm text-gray-700 mt-1">{{ r.desc }}</p>
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+    </div>
+
+    <script>
+      function handleSubmit() {
+        const btn = document.getElementById("submitBtn");
+        const text = document.getElementById("btnText");
+        const spinner = document.getElementById("spinner");
+        btn.disabled = true;
+        text.textContent = "Memproses...";
+        spinner.classList.remove("hidden");
+        return true;
+      }
+    </script>
+  </body>
+</html>
